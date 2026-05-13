@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../notifications/notifications_screen.dart';
 
 class AddUsageHeader extends StatelessWidget {
   const AddUsageHeader({super.key});
@@ -51,7 +52,9 @@ class AddUsageHeader extends StatelessWidget {
               children: [
                 IconButton(
                   icon: const Icon(Iconsax.notification, color: AppColors.textPrimary),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()));
+                  },
                 ),
                 Positioned(
                   right: 12,

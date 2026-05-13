@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../notifications/notifications_screen.dart';
 
 class KitchenHeader extends StatelessWidget {
   const KitchenHeader({super.key});
@@ -46,7 +47,12 @@ class KitchenHeader extends StatelessWidget {
                         ),
                       ],
                     ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()));
+                    },
                     child: const Icon(Iconsax.notification),
+                  ),
                   ),
                   Positioned(
                     right: 0,

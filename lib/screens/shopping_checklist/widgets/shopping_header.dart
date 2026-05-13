@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../notifications/notifications_screen.dart';
 
 class ShoppingHeader extends StatelessWidget {
   const ShoppingHeader({super.key});
@@ -40,7 +41,12 @@ class ShoppingHeader extends StatelessWidget {
               Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  const Icon(Iconsax.notification, color: AppColors.textPrimary),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()));
+                    },
+                    child: const Icon(Iconsax.notification, color: AppColors.textPrimary),
+                  ),
                   Positioned(
                     right: -2,
                     top: -2,
