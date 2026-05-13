@@ -164,6 +164,54 @@ Phase 9 completely reimagined the "Add Item" interaction, replacing the standard
     - **Floating Label Pills**: White rounded labels that slide and fade in beside each button with a modern, high-end feel.
 - **Seamless Unwind**: Smooth, synchronized reverse-animation sequence for all elements when closing or navigating.
 
+## 🚀 Phase 10: Unified Add Item Screen & Routing Refactor (Completed)
+
+Phase 10 refactored the item creation workflow to be faster and more intuitive, moving from tab-based forms to direct-push navigation.
+
+### Key Features Implemented:
+- **Direct Route Navigation**:
+    - Refactored `FloatingAddMenu` to use `Navigator.push` for all actions, allowing forms to overlay the current dashboard context.
+    - Improved UX by enabling a "Direct Action" workflow that returns users exactly where they left off.
+- **Context-Aware Forms**:
+    - Updated `AddItemScreen` to support `initialIsGrocery` states, ensuring "Add Grocery" and "Add Kitchen Tool" actions jump directly to the correct UI mode.
+
+## 🚀 Phase 11: Add Usage Screen (Completed)
+
+Phase 11 introduced a dedicated interface for tracking consumption and managing stock reduction.
+
+### Key Features Implemented:
+- **Refined Usage Workflow**:
+    - **Item Selector**: A premium card showing the selected item's precise kitchen location (Block/Shelf).
+    - **Stock Overview**: Visualizing current stock with animated progress bars and minimum alert thresholds.
+    - **Quantity Used Section**: 
+        - Integrated quick-select chips for standard usage increments.
+        - Precision input with unit-aware dropdowns.
+- **Live Preview**: Real-time "Remaining Stock" card that updates dynamically as users input usage data.
+
+## 🚀 Phase 12: Add Purchase Screen (Completed)
+
+Phase 12 focused on the inventory refill experience, tracking both stock updates and purchase metadata.
+
+### Key Features Implemented:
+- **Comprehensive Refill Form**:
+    - **Current vs. Updated Preview**: Side-by-side visualization of stock before and after the purchase.
+    - **Expenditure Tracking**: Input fields for purchase price (with ₹ prefix) and store location.
+    - **Receipt Management**: A modern, dashed-border "Add Photo" container for digitalizing bills and receipts.
+- **Temporal Logging**: Integrated date and time pickers to maintain an accurate purchase history.
+
+## 🚀 Phase 13: Notifications Screen (Completed)
+
+Phase 13 built a centralized hub for all kitchen alerts, ensuring users stay updated on stock levels and system changes.
+
+### Key Features Implemented:
+- **Centralized Alerts Hub**:
+    - **Categorized Filtering**: Horizontally scrolling filter chips (`All`, `Low Stock`, `Checklist`, `Updates`) with integrated unread badge counts.
+    - **Grouped Timeline**: Notifications categorized by "Today" and "Yesterday" for easier scanning.
+- **Interactive Notification Cards**:
+    - Color-coded icons for at-a-glance status (Orange for Warnings, Blue for Checklist, Green for Updates).
+    - Unread indicators and high-contrast styling for new alerts.
+- **Premium Empty State**: A friendly fallback UI with custom illustrations and a "Refresh" action button.
+
 ## 🛠 Technologies Used
 - **Core**: Flutter (Material 3)
 - **Animation**: [flutter_animate](https://pub.dev/packages/flutter_animate)
@@ -185,4 +233,4 @@ Phase 9 completely reimagined the "Add Item" interaction, replacing the standard
    ```
 
 ---
-*Phases 4, 5, 6, 7, 8, and 9 completed on May 13, 2026.*
+*Phases 4 through 13 completed on May 13-14, 2026.*
