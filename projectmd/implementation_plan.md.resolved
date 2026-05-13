@@ -1,0 +1,38 @@
+# Unified Add Item Screen
+
+This plan details the process for refactoring the existing `add_grocery` screen into a unified `add_item` screen that supports both Grocery and Kitchen Tool modes.
+
+## Proposed Changes
+
+### Folder and File Renames
+- **[RENAME]** `lib/screens/add_grocery/` -> `lib/screens/add_item/`
+- **[RENAME]** `lib/screens/add_item/add_grocery_screen.dart` -> `lib/screens/add_item/add_item_screen.dart`
+- **[RENAME]** `lib/screens/add_item/widgets/add_item_form.dart` -> `lib/screens/add_item/widgets/grocery_form.dart`
+
+### lib/screens/add_item/widgets/shared/
+Extract shared components from the old form to be reused in both forms:
+- **[NEW]** `custom_input.dart`: Reusable text input.
+- **[NEW]** `custom_dropdown.dart`: Reusable dropdown.
+- **[NEW]** `category_card.dart`: Reusable category card.
+- **[NEW]** `photo_upload_card.dart`: Reusable photo upload card.
+- **[NEW]** `section_title.dart`: Reusable section title text.
+
+### lib/screens/add_item/widgets/
+- **[MODIFY]** `add_item_toggle.dart`: Modify to accept `isGrocery` as a parameter and an `onToggle` callback to pass the selected state to the parent screen.
+- **[MODIFY]** `grocery_form.dart`: Update to use the shared widgets from the `shared` folder instead of private classes/methods.
+- **[NEW]** `kitchen_tool_form.dart`: Create a new form using shared widgets specifically tailored for Kitchen Tools (e.g. Material Dropdown, Purchase Date).
+
+### lib/screens/add_item/
+- **[MODIFY]** `add_item_screen.dart`: Manage the `isGrocery` state. Add an `AnimatedSwitcher` to seamlessly transition between `GroceryForm` and `KitchenToolForm` based on the toggle.
+
+## Verification Plan
+
+### Automated Tests
+N/A
+
+### Manual Verification
+1. Open the app and navigate to the Add Item Screen.
+2. Verify the toggle visually changes between "Grocery" and "Kitchen Tool" modes.
+3. Check the transition animation between forms.
+4. Ensure the correct fields (e.g. "Kitchen Tool" has Material dropdown) are present.
+5. Verify the responsive layout uses `SingleChildScrollView` to prevent overflow.
