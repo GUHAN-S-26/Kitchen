@@ -14,8 +14,16 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 1; // Default to Kitchen Screen for this task
-  int _previousIndex = 1;
+  int _currentIndex = 0; // Default to Dashboard
+  int _previousIndex = 0;
+  final List<bool> _loadedScreens = List.filled(5, false);
+
+  @override
+  void initState() {
+    super.initState();
+    _loadedScreens[_currentIndex] = true;
+    _loadedScreens[0] = true; // Always load Dashboard
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +33,17 @@ class _MainScreenState extends State<MainScreen> {
           IndexedStack(
             index: _currentIndex,
             children: [
-              const DashboardScreen(),
-              const KitchenScreen(),
-              AddItemScreen(
+              _buildScreen(0, const DashboardScreen()),
+              _buildScreen(1, const KitchenScreen()),
+              _buildScreen(2, AddItemScreen(
                 onBackPressed: () {
                   setState(() {
                     _currentIndex = _previousIndex;
                   });
                 },
-              ), // Index 2
-              const UsageScreen(), // Index 3
-              const ShoppingChecklistScreen(),  // Index 4
+              )), 
+              _buildScreen(3, const UsageScreen()), 
+              _buildScreen(4, const ShoppingChecklistScreen()),
             ],
           ),
           Positioned(
@@ -50,6 +58,7 @@ class _MainScreenState extends State<MainScreen> {
                     _previousIndex = _currentIndex;
                   }
                   _currentIndex = index;
+                  _loadedScreens[index] = true;
                 });
               },
             ),
@@ -57,5 +66,9 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildScreen(int index, Widget screen) {
+    return _loadedScreens[index] ? screen : const SizedBox.shrink();
   }
 }

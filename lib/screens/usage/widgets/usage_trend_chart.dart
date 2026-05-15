@@ -16,7 +16,7 @@ class UsageTrendChart extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.02),
+              color: Colors.black.withValues(alpha: 0.02),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -140,8 +140,8 @@ class UsageTrendChart extends StatelessWidget {
                         show: true,
                         gradient: LinearGradient(
                           colors: [
-                            AppColors.primaryGreen.withOpacity(0.3),
-                            AppColors.primaryGreen.withOpacity(0.0),
+                            AppColors.primaryGreen.withValues(alpha: 0.3),
+                            AppColors.primaryGreen.withValues(alpha: 0.0),
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,

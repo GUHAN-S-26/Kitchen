@@ -17,7 +17,7 @@ class ManualAddForm extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
+              color: Colors.black.withValues(alpha: 0.03),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -112,7 +112,7 @@ class ManualAddForm extends StatelessWidget {
                     height: 50,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColors.softGreen.withOpacity(0.3),
+                      color: AppColors.softGreen.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
@@ -248,11 +248,11 @@ class ManualAddForm extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.softGreen.withOpacity(0.1),
+        color: AppColors.softGreen.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
       ),
       child: CustomPaint(
-        painter: _DashedRectPainter(color: AppColors.primaryGreen.withOpacity(0.3)),
+        painter: _DashedRectPainter(color: AppColors.primaryGreen.withValues(alpha: 0.3)),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Row(
@@ -260,7 +260,7 @@ class ManualAddForm extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.softGreen.withOpacity(0.5),
+                  color: AppColors.softGreen.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -316,7 +316,7 @@ class _DashedRectPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    double dashWidth = 6, dashSpace = 4, startX = 0;
+    double dashWidth = 6, dashSpace = 4;
     final paint = Paint()
       ..color = color
       ..strokeWidth = 1.5

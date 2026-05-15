@@ -34,21 +34,21 @@ class LowStockSection extends StatelessWidget {
             name: 'Sugar',
             location: 'Kitchen • Block A',
             quantity: '40 g',
-            imageUrl: 'https://images.unsplash.com/photo-1581441363689-1f3c3c414635?w=150', // placeholder
+            imageUrl: 'https://picsum.photos/seed/sugar2/150/150', // placeholder
           ),
           const SizedBox(height: 12),
           const _LowStockItemCard(
             name: 'Salt',
             location: 'Kitchen • Block D',
             quantity: '20 g',
-            imageUrl: 'https://images.unsplash.com/photo-1626025211913-c906de39fc69?w=150', // placeholder
+            imageUrl: 'https://picsum.photos/seed/salt/150/150', // Milk placeholder
           ),
           const SizedBox(height: 12),
           const _LowStockItemCard(
             name: 'Oil',
             location: 'Kitchen • Block C',
             quantity: '100 ml',
-            imageUrl: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=150', // placeholder
+            imageUrl: 'https://picsum.photos/seed/oil2/150/150', // placeholder
           ),
         ],
       ),

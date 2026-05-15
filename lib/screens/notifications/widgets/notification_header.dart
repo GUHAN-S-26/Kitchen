@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../notification_settings/notification_settings_screen.dart';
+import '../../profile/profile_settings_screen.dart';
 
 class NotificationHeader extends StatelessWidget {
   const NotificationHeader({super.key});
@@ -47,30 +49,26 @@ class NotificationHeader extends StatelessWidget {
         const SizedBox(width: 8),
         Row(
           children: [
-            Stack(
-              children: [
-                IconButton(
-                  icon: const Icon(Iconsax.notification, color: AppColors.textPrimary),
-                  onPressed: () {}, // Optional action
-                ),
-                Positioned(
-                  right: 12,
-                  top: 12,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
+              IconButton(
+                icon: const Icon(Iconsax.setting_2, color: AppColors.textPrimary),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const NotificationSettingsScreen(),
                     ),
-                  ),
-                ),
-              ],
-            ),
+                  );
+                },
+              ),
             const SizedBox(width: 8),
-            const CircleAvatar(
-              radius: 20,
-              backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=34'),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileSettingsScreen()));
+              },
+              child: const CircleAvatar(
+                radius: 20,
+                backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=34'),
+              ),
             ),
           ],
         ),

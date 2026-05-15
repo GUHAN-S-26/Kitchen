@@ -16,7 +16,7 @@ class AddBlockBanner extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
         child: CustomPaint(
-          painter: _DashedRectPainter(color: AppColors.primaryGreen.withOpacity(0.5)),
+          painter: _DashedRectPainter(color: AppColors.primaryGreen.withValues(alpha: 0.5)),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -70,7 +70,7 @@ class _DashedRectPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    double dashWidth = 6, dashSpace = 4, startX = 0;
+    double dashWidth = 6, dashSpace = 4;
     final paint = Paint()
       ..color = color
       ..strokeWidth = 1.5

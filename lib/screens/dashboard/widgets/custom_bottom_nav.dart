@@ -23,7 +23,7 @@ class CustomBottomNav extends StatelessWidget {
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -56,7 +56,7 @@ class CustomBottomNav extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primaryGreen.withOpacity(0.4),
+                    color: AppColors.primaryGreen.withValues(alpha: 0.4),
                     blurRadius: 15,
                     offset: const Offset(0, 5),
                   ),
@@ -127,48 +127,4 @@ class _NavItem extends StatelessWidget {
   }
 }
 
-class _BottomSheetItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final Color color;
-  final Color iconColor;
 
-  const _BottomSheetItem({
-    required this.icon,
-    required this.title,
-    required this.color,
-    required this.iconColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: iconColor),
-          ),
-          const SizedBox(width: 16),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-          ),
-          const Spacer(),
-          const Icon(Iconsax.arrow_right_3, color: AppColors.textSecondary),
-        ],
-      ),
-    );
-  }
-}

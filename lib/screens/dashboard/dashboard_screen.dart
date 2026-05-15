@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
-import '../../core/theme/app_colors.dart';
 import 'widgets/header_section.dart';
 import 'widgets/search_bar_section.dart';
 import 'widgets/statistics_grid.dart';

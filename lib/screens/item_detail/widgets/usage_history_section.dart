@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 import '../../../core/theme/app_colors.dart';
 
 class UsageHistorySection extends StatelessWidget {

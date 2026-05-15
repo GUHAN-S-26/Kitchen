@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../add_item/widgets/shared/custom_input.dart';
 import '../../add_item/widgets/shared/custom_dropdown.dart';
 

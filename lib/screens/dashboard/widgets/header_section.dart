@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../notifications/notifications_screen.dart';
+import '../../profile/profile_settings_screen.dart';
 
 class HeaderSection extends StatelessWidget {
   const HeaderSection({super.key});
@@ -83,15 +84,20 @@ class HeaderSection extends StatelessWidget {
                 ],
               ),
               const SizedBox(width: 16),
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.softGreen,
-                  image: const DecorationImage(
-                    image: NetworkImage('https://i.pravatar.cc/150?img=32'),
-                    fit: BoxFit.cover,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileSettingsScreen()));
+                },
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.softGreen,
+                    image: const DecorationImage(
+                      image: NetworkImage('https://i.pravatar.cc/150?img=32'),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),

@@ -41,7 +41,7 @@ class SmartTipCard extends StatelessWidget {
                   Text(
                     'You used less this week! Keep it up and reduce waste.',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.iconGreen.withOpacity(0.8),
+                          color: AppColors.iconGreen.withValues(alpha: 0.8),
                         ),
                   ),
                 ],

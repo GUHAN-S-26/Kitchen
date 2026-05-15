@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../core/theme/app_colors.dart';
 
-class KitchenToggle extends StatefulWidget {
-  const KitchenToggle({super.key});
+class KitchenToggle extends StatelessWidget {
+  final int selectedIndex;
+  final ValueChanged<int> onChanged;
 
-  @override
-  State<KitchenToggle> createState() => _KitchenToggleState();
-}
-
-class _KitchenToggleState extends State<KitchenToggle> {
-  int _selectedIndex = 0;
+  const KitchenToggle({
+    super.key,
+    required this.selectedIndex,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +33,12 @@ class _KitchenToggleState extends State<KitchenToggle> {
           children: [
             Expanded(
               child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedIndex = 0;
-                  });
-                },
+                onTap: () => onChanged(0),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   margin: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: _selectedIndex == 0
+                    color: selectedIndex == 0
                         ? AppColors.primaryGreen
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
@@ -54,7 +50,7 @@ class _KitchenToggleState extends State<KitchenToggle> {
                         Icon(
                           Iconsax.shop,
                           size: 20,
-                          color: _selectedIndex == 0
+                          color: selectedIndex == 0
                               ? Colors.white
                               : AppColors.textSecondary,
                         ),
@@ -62,7 +58,7 @@ class _KitchenToggleState extends State<KitchenToggle> {
                         Text(
                           'Grocery',
                           style: TextStyle(
-                            color: _selectedIndex == 0
+                            color: selectedIndex == 0
                                 ? Colors.white
                                 : AppColors.textSecondary,
                             fontWeight: FontWeight.bold,
@@ -76,16 +72,12 @@ class _KitchenToggleState extends State<KitchenToggle> {
             ),
             Expanded(
               child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedIndex = 1;
-                  });
-                },
+                onTap: () => onChanged(1),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   margin: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: _selectedIndex == 1
+                    color: selectedIndex == 1
                         ? AppColors.primaryGreen
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
@@ -97,7 +89,7 @@ class _KitchenToggleState extends State<KitchenToggle> {
                         Icon(
                           Iconsax.box,
                           size: 20,
-                          color: _selectedIndex == 1
+                          color: selectedIndex == 1
                               ? Colors.white
                               : AppColors.textSecondary,
                         ),
@@ -105,7 +97,7 @@ class _KitchenToggleState extends State<KitchenToggle> {
                         Text(
                           'Kitchen Tools',
                           style: TextStyle(
-                            color: _selectedIndex == 1
+                            color: selectedIndex == 1
                                 ? Colors.white
                                 : AppColors.textSecondary,
                             fontWeight: FontWeight.bold,
