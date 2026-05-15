@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../providers/app/app_providers.dart';
+import '../../../providers/purchase/purchase_provider.dart';
 
-class ShoppingStatsRow extends StatelessWidget {
+class ShoppingStatsRow extends ConsumerWidget {
   const ShoppingStatsRow({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final checklistItems = ref.watch(shoppingChecklistProvider);
+    final purchaseCount = ref.watch(purchaseCountProvider);
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -14,7 +20,7 @@ class ShoppingStatsRow extends StatelessWidget {
         children: [
           _StatCard(
             title: 'Total Items',
-            value: '7',
+            value: '${checklistItems.length}',
             subtitle: 'On your list',
             icon: Iconsax.shopping_cart,
             iconColor: AppColors.iconRed,
@@ -23,7 +29,7 @@ class ShoppingStatsRow extends StatelessWidget {
           const SizedBox(width: 16),
           _StatCard(
             title: 'Low Stock',
-            value: '5',
+            value: '${checklistItems.length}',
             subtitle: 'Needs attention',
             icon: Iconsax.warning_2,
             iconColor: AppColors.iconOrange,
@@ -32,7 +38,7 @@ class ShoppingStatsRow extends StatelessWidget {
           const SizedBox(width: 16),
           _StatCard(
             title: 'Purchased',
-            value: '2',
+            value: '$purchaseCount',
             subtitle: 'Completed',
             icon: Iconsax.tick_circle,
             iconColor: AppColors.primaryGreen,

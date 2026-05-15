@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../providers/usage/usage_provider.dart';
+import '../../../providers/grocery/grocery_provider.dart';
 
-class AnalyticsGrid extends StatelessWidget {
+class AnalyticsGrid extends ConsumerWidget {
   const AnalyticsGrid({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final usageList = ref.watch(usageProvider);
+    final groceryCount = ref.watch(groceryCountProvider);
+
+    // Calculate total used quantity
+    double totalUsed = 0;
+    for (final u in usageList) {
+      totalUsed += u.quantityUsed;
+    }
+
+    // Unique items used
+    final uniqueItems = usageList.map((u) => u.itemId).toSet().length;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
@@ -15,8 +30,10 @@ class AnalyticsGrid extends StatelessWidget {
             children: [
               _AnalyticsCard(
                 title: 'Total Used',
-                value: '2.6 kg',
-                badgeText: '↑ 12% vs last week',
+                value: totalUsed > 1000
+                    ? '${(totalUsed / 1000).toStringAsFixed(1)} kg'
+                    : '${totalUsed.toStringAsFixed(0)} g',
+                badgeText: '${usageList.length} records',
                 badgeColor: AppColors.primaryGreen,
                 badgeBgColor: AppColors.primaryGreen.withOpacity(0.1),
                 icon: Iconsax.receive_square_2,
@@ -27,8 +44,8 @@ class AnalyticsGrid extends StatelessWidget {
               const SizedBox(width: 16),
               _AnalyticsCard(
                 title: 'Items Used',
-                value: '12',
-                badgeText: '↑ 8% vs last week',
+                value: '$uniqueItems',
+                badgeText: 'of $groceryCount items',
                 badgeColor: AppColors.iconBlue,
                 badgeBgColor: AppColors.softBlue,
                 icon: Iconsax.reserve,
@@ -43,8 +60,8 @@ class AnalyticsGrid extends StatelessWidget {
             children: [
               _AnalyticsCard(
                 title: 'Total Value',
-                value: '₹ 348',
-                badgeText: '↑ 15% vs last week',
+                value: '₹ 0',
+                badgeText: 'Coming soon',
                 badgeColor: AppColors.iconOrange,
                 badgeBgColor: AppColors.softOrange,
                 icon: Iconsax.chart_square,
@@ -55,8 +72,8 @@ class AnalyticsGrid extends StatelessWidget {
               const SizedBox(width: 16),
               _AnalyticsCard(
                 title: 'Wasted',
-                value: '0.3 kg',
-                badgeText: '↓ 5% vs last week',
+                value: '0',
+                badgeText: 'Coming soon',
                 badgeColor: AppColors.iconPurple,
                 badgeBgColor: AppColors.softPurple,
                 icon: Iconsax.trash,

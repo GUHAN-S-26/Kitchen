@@ -8,21 +8,91 @@ import 'shared/photo_upload_card.dart';
 import 'shared/section_title.dart';
 
 class GroceryForm extends StatefulWidget {
+  /// Controllers and state are exposed via GlobalKey<GroceryFormState>
   const GroceryForm({super.key});
 
   @override
-  State<GroceryForm> createState() => _GroceryFormState();
+  State<GroceryForm> createState() => GroceryFormState();
 }
 
-class _GroceryFormState extends State<GroceryForm> {
+class GroceryFormState extends State<GroceryForm> {
   int _selectedCategoryIndex = -1;
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController quantityController = TextEditingController();
+  final TextEditingController shelfController = TextEditingController();
+  final TextEditingController minStockController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
   int _notesCharCount = 0;
 
+  String? _selectedUnit;
+  String? _selectedBlock;
+  String? _selectedMinUnit;
+  DateTime? _expiryDate;
+
+  // Category labels
+  static const List<String> _categoryLabels = [
+    'Grains', 'Pulses', 'Spices', 'Oil & Ghee', 'Other'
+  ];
+
+  /// Collects all form data as a map
+  Map<String, dynamic> get formData => {
+    'name': nameController.text.trim(),
+    'quantity': double.tryParse(quantityController.text.trim()) ?? 0,
+    'unit': _selectedUnit ?? 'g',
+    'category': _selectedCategoryIndex >= 0 ? _categoryLabels[_selectedCategoryIndex] : '',
+    'block': _selectedBlock ?? '',
+    'shelf': shelfController.text.trim(),
+    'minimumStock': double.tryParse(minStockController.text.trim()) ?? 0,
+    'expiryDate': _expiryDate,
+    'notes': _notesController.text.trim(),
+  };
+
+  /// Validates the form — returns error message or null
+  String? validate() {
+    if (nameController.text.trim().isEmpty) return 'Please enter item name';
+    if (quantityController.text.trim().isEmpty) return 'Please enter quantity';
+    if (double.tryParse(quantityController.text.trim()) == null) return 'Invalid quantity';
+    if (_selectedUnit == null) return 'Please select a unit';
+    return null;
+  }
+
+  /// Resets the form
+  void resetForm() {
+    nameController.clear();
+    quantityController.clear();
+    shelfController.clear();
+    minStockController.clear();
+    _notesController.clear();
+    setState(() {
+      _selectedUnit = null;
+      _selectedBlock = null;
+      _selectedMinUnit = null;
+      _selectedCategoryIndex = -1;
+      _expiryDate = null;
+      _notesCharCount = 0;
+    });
+  }
+
   @override
   void dispose() {
+    nameController.dispose();
+    quantityController.dispose();
+    shelfController.dispose();
+    minStockController.dispose();
     _notesController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickExpiryDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _expiryDate ?? DateTime.now().add(const Duration(days: 30)),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
+    );
+    if (picked != null) {
+      setState(() => _expiryDate = picked);
+    }
   }
 
   @override
@@ -33,9 +103,10 @@ class _GroceryFormState extends State<GroceryForm> {
         // ─── Item Name ───
         const SectionTitle(title: 'Item Name'),
         const SizedBox(height: 8),
-        const CustomInput(
+        CustomInput(
           hintText: 'Enter item name (e.g. Sugar)',
           suffixIcon: Iconsax.box,
+          controller: nameController,
         ),
 
         const SizedBox(height: 20),
@@ -46,15 +117,20 @@ class _GroceryFormState extends State<GroceryForm> {
         const SectionTitle(title: 'Quantity'),
         const SizedBox(height: 8),
         Row(
-          children: const [
+          children: [
             Expanded(
-              child: CustomInput(hintText: 'Enter quantity'),
+              child: CustomInput(
+                hintText: 'Enter quantity',
+                controller: quantityController,
+              ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: CustomDropdown(
                 hintText: 'Select Unit',
-                items: ['g', 'kg', 'litre', 'ml', 'packet'],
+                items: const ['g', 'kg', 'litre', 'ml', 'packet'],
+                value: _selectedUnit,
+                onChanged: (val) => setState(() => _selectedUnit = val),
               ),
             ),
           ],
@@ -70,13 +146,15 @@ class _GroceryFormState extends State<GroceryForm> {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  SectionTitle(title: 'Select Block'),
-                  SizedBox(height: 8),
+                children: [
+                  const SectionTitle(title: 'Select Block'),
+                  const SizedBox(height: 8),
                   CustomDropdown(
                     hintText: 'Kitchen • Block A',
-                    items: ['Kitchen • Block A', 'Kitchen • Block B', 'Pantry'],
+                    items: const ['Kitchen • Block A', 'Kitchen • Block B', 'Pantry'],
                     prefixIcon: Iconsax.building,
+                    value: _selectedBlock,
+                    onChanged: (val) => setState(() => _selectedBlock = val),
                   ),
                 ],
               ),
@@ -85,12 +163,13 @@ class _GroceryFormState extends State<GroceryForm> {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  SectionTitle(title: 'Location', subtitle: '(Optional)'),
-                  SizedBox(height: 8),
+                children: [
+                  const SectionTitle(title: 'Location', subtitle: '(Optional)'),
+                  const SizedBox(height: 8),
                   CustomInput(
                     hintText: 'e.g. Top Shelf',
                     suffixIcon: Iconsax.location,
+                    controller: shelfController,
                   ),
                 ],
               ),
@@ -159,17 +238,22 @@ class _GroceryFormState extends State<GroceryForm> {
         ),
         const SizedBox(height: 8),
         Row(
-          children: const [
+          children: [
             Expanded(
               flex: 2,
-              child: CustomInput(hintText: 'Enter quantity'),
+              child: CustomInput(
+                hintText: 'Enter quantity',
+                controller: minStockController,
+              ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               flex: 1,
               child: CustomDropdown(
                 hintText: 'Unit',
-                items: ['g', 'kg', 'ml', 'litre'],
+                items: const ['g', 'kg', 'ml', 'litre'],
+                value: _selectedMinUnit,
+                onChanged: (val) => setState(() => _selectedMinUnit = val),
               ),
             ),
           ],
@@ -182,11 +266,14 @@ class _GroceryFormState extends State<GroceryForm> {
         // ─── Expiry Date ───
         const SectionTitle(title: 'Expiry Date', subtitle: '(Optional)'),
         const SizedBox(height: 8),
-        const CustomInput(
-          hintText: 'Select expiry date',
+        CustomInput(
+          hintText: _expiryDate != null
+              ? '${_expiryDate!.day}/${_expiryDate!.month}/${_expiryDate!.year}'
+              : 'Select expiry date',
           prefixIcon: Iconsax.calendar_1,
           suffixIcon: Iconsax.arrow_right_3,
           readOnly: true,
+          onTap: _pickExpiryDate,
         ),
 
         const SizedBox(height: 20),

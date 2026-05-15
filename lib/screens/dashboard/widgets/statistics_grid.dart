@@ -1,50 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../providers/app/app_providers.dart';
 
-class StatisticsGrid extends StatelessWidget {
+class StatisticsGrid extends ConsumerWidget {
   const StatisticsGrid({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stats = ref.watch(dashboardStatsProvider);
+
     return SizedBox(
       height: 160,
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        children: const [
+        children: [
           _StatCard(
             title: 'Grocery Items',
-            count: '24',
+            count: '${stats.totalGroceries}',
             subtitle: 'Total Items',
             icon: Iconsax.shop,
             backgroundColor: AppColors.softGreen,
             iconColor: AppColors.iconGreen,
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           _StatCard(
             title: 'Kitchen Tools',
-            count: '58',
+            count: '${stats.totalKitchenTools}',
             subtitle: 'Total Items',
             icon: Iconsax.reserve,
             backgroundColor: AppColors.softBlue,
             iconColor: AppColors.iconBlue,
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           _StatCard(
             title: 'Low Stock',
-            count: '5',
+            count: '${stats.lowStockCount}',
             subtitle: 'Items',
             icon: Iconsax.warning_2,
             backgroundColor: AppColors.softOrange,
             iconColor: AppColors.iconOrange,
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           _StatCard(
-            title: 'In Cart',
-            count: '3',
-            subtitle: 'Items',
-            icon: Iconsax.shopping_cart,
+            title: 'Usage',
+            count: '${stats.recentUsageCount}',
+            subtitle: 'Records',
+            icon: Iconsax.chart_2,
             backgroundColor: AppColors.softPurple,
             iconColor: AppColors.iconPurple,
           ),

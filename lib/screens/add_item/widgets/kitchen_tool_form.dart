@@ -11,18 +11,88 @@ class KitchenToolForm extends StatefulWidget {
   const KitchenToolForm({super.key});
 
   @override
-  State<KitchenToolForm> createState() => _KitchenToolFormState();
+  State<KitchenToolForm> createState() => KitchenToolFormState();
 }
 
-class _KitchenToolFormState extends State<KitchenToolForm> {
+class KitchenToolFormState extends State<KitchenToolForm> {
   int _selectedCategoryIndex = -1;
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController quantityController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController minStockController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
   int _notesCharCount = 0;
 
+  String? _selectedUnit;
+  String? _selectedBlock;
+  String? _selectedMaterial;
+  String? _selectedMinUnit;
+  DateTime? _purchaseDate;
+
+  // Category labels
+  static const List<String> _categoryLabels = [
+    'Cutlery', 'Cookware', 'Appliances', 'Utensils', 'Other'
+  ];
+
+  /// Collects all form data as a map
+  Map<String, dynamic> get formData => {
+    'name': nameController.text.trim(),
+    'quantity': int.tryParse(quantityController.text.trim()) ?? 0,
+    'unit': _selectedUnit ?? 'piece',
+    'category': _selectedCategoryIndex >= 0 ? _categoryLabels[_selectedCategoryIndex] : '',
+    'block': _selectedBlock ?? '',
+    'location': locationController.text.trim(),
+    'material': _selectedMaterial,
+    'purchaseDate': _purchaseDate,
+    'notes': _notesController.text.trim(),
+  };
+
+  /// Validates the form — returns error message or null
+  String? validate() {
+    if (nameController.text.trim().isEmpty) return 'Please enter tool name';
+    if (quantityController.text.trim().isEmpty) return 'Please enter quantity';
+    if (int.tryParse(quantityController.text.trim()) == null) return 'Invalid quantity';
+    return null;
+  }
+
+  /// Resets the form
+  void resetForm() {
+    nameController.clear();
+    quantityController.clear();
+    locationController.clear();
+    minStockController.clear();
+    _notesController.clear();
+    setState(() {
+      _selectedUnit = null;
+      _selectedBlock = null;
+      _selectedMaterial = null;
+      _selectedMinUnit = null;
+      _selectedCategoryIndex = -1;
+      _purchaseDate = null;
+      _notesCharCount = 0;
+    });
+  }
+
   @override
   void dispose() {
+    nameController.dispose();
+    quantityController.dispose();
+    locationController.dispose();
+    minStockController.dispose();
     _notesController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickPurchaseDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _purchaseDate ?? DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() => _purchaseDate = picked);
+    }
   }
 
   @override
@@ -33,9 +103,10 @@ class _KitchenToolFormState extends State<KitchenToolForm> {
         // ─── Tool Name ───
         const SectionTitle(title: 'Tool Name'),
         const SizedBox(height: 8),
-        const CustomInput(
+        CustomInput(
           hintText: 'Enter tool name (e.g. Knife, Blender)',
           suffixIcon: Iconsax.setting_4,
+          controller: nameController,
         ),
 
         const SizedBox(height: 20),
@@ -46,15 +117,20 @@ class _KitchenToolFormState extends State<KitchenToolForm> {
         const SectionTitle(title: 'Quantity'),
         const SizedBox(height: 8),
         Row(
-          children: const [
+          children: [
             Expanded(
-              child: CustomInput(hintText: 'Enter quantity'),
+              child: CustomInput(
+                hintText: 'Enter quantity',
+                controller: quantityController,
+              ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: CustomDropdown(
                 hintText: 'Select Unit',
-                items: ['piece', 'set', 'box', 'unit'],
+                items: const ['piece', 'set', 'box', 'unit'],
+                value: _selectedUnit,
+                onChanged: (val) => setState(() => _selectedUnit = val),
               ),
             ),
           ],
@@ -70,13 +146,15 @@ class _KitchenToolFormState extends State<KitchenToolForm> {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  SectionTitle(title: 'Select Block'),
-                  SizedBox(height: 8),
+                children: [
+                  const SectionTitle(title: 'Select Block'),
+                  const SizedBox(height: 8),
                   CustomDropdown(
                     hintText: 'Kitchen • Block A',
-                    items: ['Kitchen • Block A', 'Kitchen • Block B', 'Pantry'],
+                    items: const ['Kitchen • Block A', 'Kitchen • Block B', 'Pantry'],
                     prefixIcon: Iconsax.building,
+                    value: _selectedBlock,
+                    onChanged: (val) => setState(() => _selectedBlock = val),
                   ),
                 ],
               ),
@@ -85,12 +163,13 @@ class _KitchenToolFormState extends State<KitchenToolForm> {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  SectionTitle(title: 'Location', subtitle: '(Optional)'),
-                  SizedBox(height: 8),
+                children: [
+                  const SectionTitle(title: 'Location', subtitle: '(Optional)'),
+                  const SizedBox(height: 8),
                   CustomInput(
                     hintText: 'e.g. Top Drawer',
                     suffixIcon: Iconsax.location,
+                    controller: locationController,
                   ),
                 ],
               ),
@@ -155,9 +234,11 @@ class _KitchenToolFormState extends State<KitchenToolForm> {
         // ─── Tool Material ───
         const SectionTitle(title: 'Tool Material', subtitle: '(Optional)'),
         const SizedBox(height: 8),
-        const CustomDropdown(
+        CustomDropdown(
           hintText: 'e.g. Stainless Steel, Plastic, Wood',
-          items: ['Stainless Steel', 'Plastic', 'Wood', 'Glass', 'Ceramic'],
+          items: const ['Stainless Steel', 'Plastic', 'Wood', 'Glass', 'Ceramic'],
+          value: _selectedMaterial,
+          onChanged: (val) => setState(() => _selectedMaterial = val),
         ),
 
         const SizedBox(height: 20),
@@ -179,16 +260,21 @@ class _KitchenToolFormState extends State<KitchenToolForm> {
             Expanded(
               flex: 2,
               child: Row(
-                children: const [
+                children: [
                   Expanded(
-                    child: CustomInput(hintText: 'Enter quantity'),
+                    child: CustomInput(
+                      hintText: 'Enter quantity',
+                      controller: minStockController,
+                    ),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   SizedBox(
                     width: 80,
                     child: CustomDropdown(
                       hintText: 'Unit',
-                      items: ['piece', 'set', 'box', 'unit'],
+                      items: const ['piece', 'set', 'box', 'unit'],
+                      value: _selectedMinUnit,
+                      onChanged: (val) => setState(() => _selectedMinUnit = val),
                     ),
                   ),
                 ],
@@ -204,11 +290,14 @@ class _KitchenToolFormState extends State<KitchenToolForm> {
         // ─── Purchase Date ───
         const SectionTitle(title: 'Purchase Date', subtitle: '(Optional)'),
         const SizedBox(height: 8),
-        const CustomInput(
-          hintText: 'Select purchase date',
+        CustomInput(
+          hintText: _purchaseDate != null
+              ? '${_purchaseDate!.day}/${_purchaseDate!.month}/${_purchaseDate!.year}'
+              : 'Select purchase date',
           prefixIcon: Iconsax.calendar_1,
           suffixIcon: Iconsax.arrow_right_3,
           readOnly: true,
+          onTap: _pickPurchaseDate,
         ),
 
         const SizedBox(height: 20),

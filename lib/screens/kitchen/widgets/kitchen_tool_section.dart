@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../providers/kitchen_tool/kitchen_tool_provider.dart';
 import 'package:iconsax/iconsax.dart';
 import 'kitchen_tool_card.dart';
 import 'kitchen_tool_status_badge.dart';
 
-class KitchenToolSection extends StatelessWidget {
+class KitchenToolSection extends ConsumerWidget {
   const KitchenToolSection({super.key});
 
+  /// Maps model condition string to ToolStatus enum
+  ToolStatus _conditionToStatus(String condition) {
+    switch (condition) {
+      case 'in_use':
+        return ToolStatus.inUse;
+      case 'needs_repair':
+        return ToolStatus.needsSharpening;
+      case 'missing':
+        return ToolStatus.missing;
+      default:
+        return ToolStatus.available;
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tools = ref.watch(kitchenToolProvider);
+
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       sliver: SliverList(
@@ -47,43 +65,51 @@ class KitchenToolSection extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            
-            // Tools List
-            const KitchenToolCard(
-              name: 'Chef Knife',
-              location: 'Kitchen • Drawer A',
-              status: ToolStatus.available,
-              quantity: '1 Piece',
-              imageUrl: 'https://images.unsplash.com/photo-1593455986872-9fa94fb5742a?w=500&q=80',
-            ),
-            const KitchenToolCard(
-              name: 'Frying Pan',
-              location: 'Kitchen • Shelf B',
-              status: ToolStatus.inUse,
-              quantity: '2 Pieces',
-              imageUrl: 'https://images.unsplash.com/photo-1584286595398-a59f21d313f5?w=500&q=80',
-            ),
-            const KitchenToolCard(
-              name: 'Food Container Set',
-              location: 'Kitchen • Cabinet C',
-              status: ToolStatus.available,
-              quantity: '5 Pieces',
-              imageUrl: 'https://images.unsplash.com/photo-1592686082987-0b1968d40767?w=500&q=80',
-            ),
-            const KitchenToolCard(
-              name: 'Kitchen Scissors',
-              location: 'Kitchen • Drawer A',
-              status: ToolStatus.needsSharpening,
-              quantity: '1 Piece',
-              imageUrl: 'https://images.unsplash.com/photo-1572621415277-2e1183188832?w=500&q=80',
-            ),
-            const KitchenToolCard(
-              name: 'Cheese Grater',
-              location: 'Kitchen • Drawer B',
-              status: ToolStatus.missing,
-              quantity: '1 Piece',
-              imageUrl: 'https://images.unsplash.com/photo-1585038936611-37d45464c098?w=500&q=80',
-            ),
+
+            // Empty state
+            if (tools.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 32.0),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: AppColors.softBlue,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Iconsax.reserve, size: 40, color: AppColors.iconBlue),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No kitchen tools yet',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Tap the + button to add your first kitchen tool',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else
+              ...tools.map((tool) => KitchenToolCard(
+                    name: tool.name,
+                    location: tool.block.isNotEmpty
+                        ? '${tool.block}${tool.location.isNotEmpty ? ' • ${tool.location}' : ''}'
+                        : (tool.location.isNotEmpty ? tool.location : 'No location set'),
+                    status: _conditionToStatus(tool.condition),
+                    quantity: tool.quantityDisplay,
+                    imageUrl: tool.imagePath ?? '',
+                  )),
           ],
         ),
       ),
