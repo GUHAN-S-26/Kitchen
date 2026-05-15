@@ -312,13 +312,36 @@ Phase 19 focused on a complete visual and functional overhaul of the Kitchen Too
 - **Efficiency Improvements**:
     - Removed complex analytics, maintenance reminders, and usage timelines to create a faster, lightweight interaction flow focused on core management tasks.
 
+## 🚀 Phase 20: State Management & Local Persistence (Completed)
+
+Phase 20 transformed the Smart Kitchen app from a UI prototype into a fully functional, offline-first application by implementing a robust state management and persistence architecture.
+
+### Key Features Implemented:
+- **Riverpod State Management**:
+    - Implemented `StateNotifier` providers for all core domains (Grocery, Tools, Usage, Purchase).
+    - Reactive UI updates across the Dashboard, Kitchen, and Shopping Checklist screens.
+    - Derived providers for real-time statistics and automated shopping suggestions.
+- **Hive Local Database**:
+    - High-performance, on-device NoSQL storage for all inventory and history data.
+    - Custom Hive TypeAdapters for high-speed serialization of complex models.
+    - **Offline-First Design**: All data persists across app restarts without requiring a cloud backend.
+- **Repository Pattern Architecture**:
+    - Clean separation of concerns: `UI` → `Riverpod Providers` → `Repositories` → `Hive Services` → `Local Storage`.
+- **Automated Inventory Logic**:
+    - **Smart Refills**: Adding a "Purchase" record automatically increments grocery stock levels.
+    - **Usage Tracking**: Recording "Usage" automatically decrements stock and triggers low-stock alerts.
+    - **Dynamic Shopping List**: The checklist is auto-populated based on real-time stock levels vs. user-defined minimums.
+
 ## 🛠 Technologies Used
 - **Core**: Flutter (Material 3)
+- **State Management**: [flutter_riverpod](https://pub.dev/packages/flutter_riverpod)
+- **Local Database**: [hive_flutter](https://pub.dev/packages/hive_flutter)
 - **Animation**: [flutter_animate](https://pub.dev/packages/flutter_animate)
 - **Visualization**: [fl_chart](https://pub.dev/packages/fl_chart)
 - **Typography**: [Google Fonts (Inter)](https://pub.dev/packages/google_fonts)
 - **Icons**: [Iconsax](https://pub.dev/packages/iconsax)
-- **Performance**: Lazy Loading, Asset Optimization
+- **Utilities**: [uuid](https://pub.dev/packages/uuid)
+- **Performance**: Lazy Loading, Asset Optimization, NoSQL Persistence
 
 ## 📸 Getting Started
 
@@ -333,4 +356,4 @@ Phase 19 focused on a complete visual and functional overhaul of the Kitchen Too
    ```
 
 ---
-*Phases 4 through 19 completed on May 13-15, 2026.*
+*Phases 4 through 20 completed on May 13-15, 2026.*
